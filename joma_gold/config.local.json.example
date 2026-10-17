@@ -1,0 +1,6 @@
+{
+  "oanda": {
+    "token": "PASTE_YOUR_OANDA_PRACTICE_TOKEN",
+    "account_id": "101-001-XXXXXXX-001"
+  }
+}

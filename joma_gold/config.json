@@ -1,0 +1,112 @@
+{
+  "host": "127.0.0.1",
+  "port": 8080,
+  "price": {
+    "priority": [
+      "OANDA",
+      "MT5"
+    ],
+    "chart": "auto"
+  },
+  "mt5": {
+    "enabled": true,
+    "symbol": "AUTO",
+    "terminal_path": "",
+    "poll_ms": 120,
+    "candles_refresh_seconds": 3
+  },
+  "oanda": {
+    "enabled": true,
+    "environment": "practice",
+    "instrument": "XAU_USD",
+    "token": "",
+    "account_id": "",
+    "candle_price": "M",
+    "book_poll_seconds": 180,
+    "book_backfill_snapshots": 72,
+    "analysis_candles_seconds": 15
+  },
+  "sources": {
+    "bitfinex": {
+      "enabled": true,
+      "symbol": "tXAUTUSD",
+      "raw_len": 250,
+      "checksum": true
+    },
+    "kraken": {
+      "enabled": true,
+      "symbols": [
+        "XAUT/USD",
+        "PAXG/USD"
+      ],
+      "depth": 500
+    },
+    "okx": {
+      "enabled": true,
+      "symbols": [
+        "XAUT-USDT",
+        "PAXG-USDT"
+      ],
+      "channel": "books"
+    },
+    "binance_futures": {
+      "enabled": true,
+      "symbol": "XAUUSDT",
+      "ws_base": "wss://fstream.binance.com/stream?streams=",
+      "rest_depth": "https://fapi.binance.com/fapi/v1/depth",
+      "rest_klines": "https://fapi.binance.com/fapi/v1/klines",
+      "depth_limit": 1000,
+      "snapshot_refresh_seconds": 20
+    },
+    "binance_spot": {
+      "enabled": true,
+      "symbol": "PAXGUSDT",
+      "ws_base": "wss://stream.binance.com:9443/stream?streams=",
+      "rest_depth": "https://api.binance.com/api/v3/depth",
+      "rest_klines": "https://api.binance.com/api/v3/klines",
+      "depth_limit": 1000,
+      "snapshot_refresh_seconds": 20
+    }
+  },
+  "engine": {
+    "bucket_usd": 0.5,
+    "max_distance_usd": 180.0,
+    "near_distance_usd": 20.0,
+    "top_zones": 18,
+    "min_notional_usd": 10000,
+    "min_strength": 18,
+    "persistence_full_seconds": 45,
+    "stale_source_ms": 6500,
+    "basis_window": 31,
+    "basis_ema_alpha": 0.22,
+    "trade_window_seconds": 8,
+    "local_trade_radius_usd": 1.25,
+    "signal_min_quality": 0.42,
+    "signal_flow_threshold": 0.22,
+    "snapshot_interval_ms": 350,
+    "mid_distance_usd": 60.0,
+    "far_distance_usd": 120.0,
+    "near_zones_per_side": 3,
+    "mid_zones_per_side": 2,
+    "far_zones_per_side": 2,
+    "deep_zones_per_side": 2
+  },
+  "heat": {
+    "enabled": true,
+    "interval_ms": 5000,
+    "bucket_usd": 0.5,
+    "window_usd": 70,
+    "min_k_usd": 20,
+    "max_cells": 400
+  },
+  "flow": {
+    "bucket_usd": 0.5
+  },
+  "recording": {
+    "enabled": true,
+    "sqlite_path": "data/liquidity_history.db",
+    "interval_ms": 1000,
+    "retention_hours": 168,
+    "heat_retention_hours": 72
+  }
+}

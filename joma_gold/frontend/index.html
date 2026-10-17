@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#05080d">
+  <title>JOMA GOLD · Gold Intelligence Terminal V19</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="stylesheet" href="/static/css/indicators.css">
+  <link rel="stylesheet" href="/static/css/pro_suite.css">
+  <link rel="stylesheet" href="/static/css/pro_v19.css">
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand"><span class="mark">JG</span><span class="brand-name">JOMA GOLD <span class="brand-edition">V19 PRO</span></span></div>
+    <div class="market">
+      <span id="symbol">XAUUSD</span><strong id="price">—</strong><span id="spread" class="muted"></span><span id="priceSource" class="source-tag">WAITING</span>
+    </div>
+    <div id="biasPill" class="bias neutral" title=""><span id="biasText">WARMING</span><b id="biasScore"></b></div>
+    <div class="tf" id="tfGroup"><button data-tf="1m">1m</button><button data-tf="5m">5m</button><button data-tf="15m" class="active">15m</button><button data-tf="30m">30m</button><button data-tf="1h">1H</button><button data-tf="4h">4H</button><button data-tf="1d">D</button></div>
+    <div class="menus">
+      <div class="menu" id="toolsMenu">
+        <button class="mbtn" id="toolsBtn" title="Measure, position tool, replay">Tools ▾</button>
+        <div class="mpanel hidden" id="toolsPanel">
+          <button data-tool="measure"><b>Measure</b><span>Drag a box to read the liquidity inside it</span></button>
+          <button data-tool="long"><b>Long</b><span>Click entry, then stop-loss (TP = 2R)</span></button>
+          <button data-tool="short"><b>Short</b><span>Click entry, then stop-loss (TP = 2R)</span></button>
+          <button data-tool="clear"><b>Clear drawings</b><span>Remove the box and the position (Esc)</span></button>
+          <button data-tool="replay"><b>Replay</b><span>Scrub the recorded liquidity zones</span></button>
+        </div>
+      </div>
+      <button class="mbtn" id="indBtn" title="Add and configure indicators">ƒx Indicators <span id="indCount" class="cnt"></span></button>
+      <button class="mbtn studio-trigger" id="suiteToggle" title="Open analysis studio" aria-expanded="false">◈ Studio</button>
+      <button class="mbtn icon" id="settingsBtn" title="Settings">⚙</button>
+    </div>
+  </header>
+  <div id="strip" class="strip">
+    <div id="crossInfo" class="cross-info">Hover a candle</div>
+    <div id="bookChip" class="chip"></div>
+    <div id="heatChip" class="chip"></div>
+    <div id="flowChip" class="chip"></div>
+    <button id="feeds" class="feeds" title="Data feeds"></button>
+    <div id="feedsPanel" class="feeds-panel hidden"></div>
+  </div>
+  <div id="indBar" class="indbar hidden"></div>
+  <main id="chartShell">
+    <canvas id="heat" class="layer"></canvas>
+    <div id="chart"></div>
+    <canvas id="fx" class="layer fx"></canvas>
+    <div id="measureLayer" class="hidden"></div>
+    <div id="notice" class="notice hidden"></div>
+    <div id="offline" class="offline hidden">LIVE PRICE UNAVAILABLE · NO SYNTHETIC DATA</div>
+    <div id="flowTitle" class="flow-title hidden"><b>ORDER FLOW</b> · bars = buy − sell per candle · line = CVD (running total)</div>
+    <div id="hoverTip" class="otip hidden"></div>
+    <div id="measurePanel" class="mpanel-box hidden"></div>
+    <div id="zoneDetail" class="zone-detail hidden"></div>
+    <div id="replayBar" class="replay-bar hidden"><span id="replayTime">Replay</span><input id="replaySlider" type="range" min="0" max="0" value="0"><button id="replayLive">LIVE</button></div>
+    <a class="tv-credit" href="https://www.tradingview.com/" target="_blank" rel="noopener">Charts by TradingView</a>
+  </main>
+  <aside id="suitePanel" class="suite-panel hidden" aria-label="Market intelligence studio">
+    <div class="suite-head">
+      <div><span class="suite-eyebrow">JOMA / INTELLIGENCE</span><h2>Gold Intelligence <span>V19</span></h2></div>
+      <button type="button" id="suiteClose" class="suite-close" aria-label="Close studio">×</button>
+    </div>
+    <div class="suite-tabs" role="tablist" aria-label="Analysis sections">
+      <button type="button" data-suite-tab="overview" class="active">Overview</button>
+      <button type="button" data-suite-tab="footprint">Footprint</button>
+      <button type="button" data-suite-tab="depth">Depth</button>
+      <button type="button" data-suite-tab="levels">Levels</button>
+      <button type="button" data-suite-tab="research">Research 11</button>
+      <button type="button" data-suite-tab="workspaces">Layouts</button>
+    </div>
+    <div class="suite-body" id="suiteBody"></div>
+    <div class="suite-bottom"><span id="suiteSource">Broker + recorded venue data</span><span id="suiteClock">—</span></div>
+  </aside>
+  <div id="suiteToast" class="suite-toast hidden" role="status" aria-live="polite"></div>
+  <div id="indModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-head"><strong>Indicators</strong><input id="indSearch" type="search" placeholder="Search indicators…" autocomplete="off"><button id="indClose" aria-label="Close">×</button></div>
+      <div class="modal-body"><nav id="indCats" class="ind-cats"></nav><div id="indList" class="ind-list"></div></div>
+      <div class="modal-foot">Indicators are computed in your browser from your broker's candles. Volume = broker tick volume. Add your own in <code>frontend/js/indicators/custom/</code> — see docs/ADDING_INDICATORS.md.</div>
+    </div>
+  </div>
+  <div id="indPop" class="ind-pop hidden"></div>
+  <aside id="settings" class="settings hidden">
+    <div class="settings-head"><strong>Settings</strong><button id="closeSettings">×</button></div>
+    <label>Heat scale (max resting $ per $0.50)<select id="heatMax"></select></label>
+    <label>Heat look<select id="heatSoft"><option value="0">Sharp cells</option><option value="1">Soft</option><option value="2">Smooth</option></select></label>
+    <label>Smallest trade shown <span id="bminVal"></span><input id="bmin" type="range" min="50000" max="2000000" step="10000" value="150000"></label>
+    <label>Trade size scale (full circle = ) <span id="brefVal"></span><input id="bref" type="range" min="500000" max="20000000" step="250000" value="5000000"></label>
+    <label>OANDA layer shows<select id="bookKind"><option value="order">Pending orders</option><option value="position">Open positions</option></select></label>
+    <label>Position size (oz)<input id="psize" type="number" min="1" step="1" value="100"></label>
+    <label>Replay window <select id="replayMinutes"><option value="10">10 min</option><option value="30" selected>30 min</option><option value="60">1 hour</option><option value="180">3 hours</option></select></label>
+    <div class="settings-note"><b>Resting liquidity</b> comes only from order books this server recorded (public gold-linked venues, shifted onto your broker's price). Before recording started the area is empty. <b>OANDA</b> is the broker's client-order book: share of order <i>count</i>, not size. <b>Trades / Delta / CVD</b> are executed trades on the public venues, not your broker's volume.</div>
+  </aside>
+</div>
+<script src="/static/vendor/lightweight-charts.standalone.production.js"></script>
+<script src="/static/js/app.js"></script>
+<script src="/static/js/indicators/ta.js"></script>
+<script src="/static/js/indicators/kit.js"></script>
+<script src="/static/js/indicators/core.js"></script>
+<script src="/static/js/indicators/lib_trend.js"></script>
+<script src="/static/js/indicators/lib_momentum.js"></script>
+<script src="/static/js/indicators/lib_volume.js"></script>
+<script src="/static/js/indicators/lib_structure.js"></script>
+<script src="/static/js/indicators/custom/example.js"></script>
+<script src="/static/js/indicators/lib_studio.js"></script>
+<script src="/static/js/indicators/lib_research11.js"></script>
+<script src="/static/js/pro_suite.js"></script>
+<script>JG.boot(); JG.studio.boot();</script>
+</body></html>
